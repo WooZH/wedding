@@ -66,7 +66,7 @@
             888888
         </div>
         <div class="action-bar">
-            <button class="nice-button" onclick="whoIsTheLuckyStar()">
+            <button class="nice-button" onclick="imLucky()" id="lucky_button">
                 开始抽奖
             </button>
         </div>
@@ -75,7 +75,6 @@
     <div class="beauty">
         <h3>以下是中奖名单</h3>
         <ul class="" id="lucky_list">
-            <!--<li>880001</li>-->
         </ul>
     </div>
 </div>
@@ -85,41 +84,51 @@
 <script>
     var lucky = document.getElementById('lucky');
     var lucky_list = document.getElementById('lucky_list');
-    var lucky_number = 888888;
+    var lucky_button = document.getElementById('lucky_button');
+    var lucky_number = 888;
+    var start = false;
+    var timer;
 
-    function whoIsTheLuckyStar(me) {
-        var time_limit = 1000;
-        var time = 100;
-
-        var timer = setInterval(function () {
-            if (time < time_limit) {
-                lucky_number = (Math.random() * 1000).toFixed(0);
-                if (lucky_number.length < 3) {
-                    lucky_number = '0' + lucky_number;
-                }
-                lucky.innerText = '888' + lucky_number;
-                time = time + 40
-            } else {
-                clearInterval(timer);
-                if (me) {
-                    lucky.innerText = '888' + me;
-                    lucky_number = me;
-                }
-                var node = document.createElement("li");
-                var lucky_star = document.createTextNode('888' + lucky_number);
-                node.appendChild(lucky_star);
-                lucky_list.appendChild(node);
+    function whoIsTheLuckyStar() {
+        var time = 50;
+        clearInterval(timer);
+        timer = setInterval(function () {
+            lucky_number = (Math.random() * 1000).toFixed(0);
+            if (lucky_number.length == 2) {
+                lucky_number = '0' + lucky_number;
             }
+            if (lucky_number.length == 1) {
+                lucky_number = '00' + lucky_number;
+            }
+            lucky.innerText = '888' + lucky_number;
         }, time)
+    }
+
+    function imLucky() {
+        if (!start) {
+            whoIsTheLuckyStar();
+            start = true;
+            lucky_button.innerText='抽奖中~';
+        }
+        else {
+            window.clearInterval(timer);
+            var node = document.createElement("li");
+            var lucky_star = document.createTextNode('888' + lucky_number);
+            node.appendChild(lucky_star);
+            lucky_list.appendChild(node);
+            start = false;
+            lucky_button.innerText='开始抽奖';
+
+        }
     }
 
     document.onkeydown = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
-        if (e && e.keyCode == 87) { // 按
-            whoIsTheLuckyStar(111);
-        }
+//        if (e && e.keyCode == 87) { // 按
+//            whoIsTheLuckyStar();
+//        }
         if (e && e.keyCode == 13) { // enter 键
-            whoIsTheLuckyStar(222);
+            imLucky()
         }
     };
 </script>
