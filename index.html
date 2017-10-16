@@ -5,66 +5,84 @@
     <title>幸运大抽奖</title>
     <meta name="author" content="wangzhiheng703@gmail.com">
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1"/>
+    <style>
+        html body {
+            font-family: Menlo, Monaco, consolas;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrap {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom right, #dab6da, #a1a6cf);
+            color: #efefef;
+        }
+
+        .beauty {
+            margin: 50px auto;
+            width: 70%;
+            height: auto;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            max-height: 300px;
+        }
+
+        .title {
+            font-size: 40px;
+            color: #ffffff;
+            text-align: center;
+            letter-spacing: 10px;
+        }
+
+        .action-bar {
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .nice-button {
+            font-size: 20px;
+            border-radius: 4px;
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            -webkit-appearance: none;
+            background: rgba(0, 0, 0, 0);
+            padding: 5px 20px;
+            outline: 0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nice-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lucky_list{
+            padding: 0;
+            list-style: none;
+        }
+
+        .lucky_list li{
+            float: left;
+            width: 20%;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .clean{
+            clear: both;
+        }
+    </style>
 </head>
-<style>
-    html body {
-        font-family: Menlo, Monaco, consolas;
-        margin: 0;
-        padding: 0;
-    }
-
-    .wrap {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to bottom right, #dab6da, #a1a6cf);
-        color: #efefef;
-    }
-
-    .beauty {
-        margin: 50px auto;
-        width: 70%;
-        height: auto;
-        background: rgba(255, 255, 255, 0.2);
-        padding: 20px;
-    }
-
-    .title {
-        font-size: 40px;
-        color: #ffffff;
-        text-align: center;
-        letter-spacing: 10px;
-    }
-
-    .action-bar {
-        width: 100%;
-        text-align: center;
-        margin-top: 50px;
-    }
-
-    .nice-button {
-        font-size: 20px;
-        border-radius: 4px;
-        border: 2px solid #ffffff;
-        color: #ffffff;
-        -webkit-appearance: none;
-        background: rgba(0, 0, 0, 0);
-        padding: 5px 20px;
-        outline: 0;
-        transition: all 0.3s;
-        cursor: pointer;
-    }
-
-    .nice-button:hover {
-        background: rgba(255, 255, 255, 0.2);
-    }
-</style>
 <body>
 <div class="wrap">
     <div class="beauty">
         <div class="title" id="lucky">
             888888
         </div>
+
         <div class="action-bar">
             <button class="nice-button" onclick="imLucky()" id="lucky_button">
                 开始抽奖
@@ -74,8 +92,9 @@
 
     <div class="beauty">
         <h3>以下是中奖名单</h3>
-        <ul class="" id="lucky_list">
+        <ul class="lucky_list" id="lucky_list">
         </ul>
+        <div class="clean"></div>
     </div>
 </div>
 
@@ -86,14 +105,18 @@
     var lucky_list = document.getElementById('lucky_list');
     var lucky_button = document.getElementById('lucky_button');
     var lucky_number = 888;
+    var stars = [];
     var start = false;
     var timer;
+
+    var max = 300;
+    var min = 1;
 
     function whoIsTheLuckyStar() {
         var time = 50;
         clearInterval(timer);
         timer = setInterval(function () {
-            lucky_number = (Math.random() * 1000).toFixed(0);
+            lucky_number = (Math.random() * max + min).toFixed(0);
             if (lucky_number.length == 2) {
                 lucky_number = '0' + lucky_number;
             }
@@ -105,28 +128,36 @@
     }
 
     function imLucky() {
-        if (!start) {
-            whoIsTheLuckyStar();
-            start = true;
-            lucky_button.innerText='抽奖中~';
+        if(stars.length >= max){
+            lucky_button.innerText = '所有号码都抽完啦';
         }
-        else {
-            window.clearInterval(timer);
-            var node = document.createElement("li");
-            var lucky_star = document.createTextNode('888' + lucky_number);
-            node.appendChild(lucky_star);
-            lucky_list.appendChild(node);
-            start = false;
-            lucky_button.innerText='开始抽奖';
-
+        else{
+            if (!start) {
+                whoIsTheLuckyStar();
+                start = true;
+                lucky_button.innerText = '抽奖中~';
+            }
+            else {
+                if(stars.indexOf(lucky_number)> -1){
+                    start = false;
+                    imLucky()
+                }else{
+                    stars.push(lucky_number);
+                    window.clearInterval(timer);
+                    var node = document.createElement("li");
+                    var lucky_star = document.createTextNode('888' + lucky_number);
+                    node.appendChild(lucky_star);
+                    lucky_list.appendChild(node);
+                    start = false;
+                    lucky_button.innerText = '开始抽奖';
+                    console.log(stars)
+                }
+            }
         }
     }
 
     document.onkeydown = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
-//        if (e && e.keyCode == 87) { // 按
-//            whoIsTheLuckyStar();
-//        }
         if (e && e.keyCode == 13) { // enter 键
             imLucky()
         }
