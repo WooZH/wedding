@@ -4,34 +4,102 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <meta name="author" content="wangzhiheng703@gmail.com">
-    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1"/>
 </head>
 <style>
-    html body{
+    html body {
 
-        margin:0;
+        margin: 0;
         padding: 0;
     }
-    .wrap{
+
+    .wrap {
         position: absolute;
         width: 100%;
         height: 100%;
         background: linear-gradient(to bottom right, #dab6da, #a1a6cf);
-color: #efefef;
+        color: #efefef;
     }
-    .title{
+
+    .beauty {
+        margin: 50px auto;
+        width: 50%;
+        height: auto;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 20px;
+    }
+
+    .title {
         font-size: 40px;
+        color: #ffffff;
         text-align: center;
+        letter-spacing: 10px;
+    }
+
+    .action-bar {
+        width: 100%;
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .nice-button {
+        font-size: 20px;
+        border-radius: 4px;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+        -webkit-appearance: none;
+        background: rgba(0, 0, 0, 0);
     }
 </style>
 <body>
-    <div class="wrap">
-        <div class="title">
-            <!--W&H-->
+<div class="wrap">
+    <div class="beauty">
+        <div class="title" id="lucky">
+            888888
         </div>
-        <div>
-
+        <div class="action-bar">
+            <button class="nice-button" onclick="whoIsTheLuckyStar()">
+                开始抽奖
+            </button>
         </div>
     </div>
+
+    <div class="beauty">
+        <h3>以下是中奖名单</h3>
+        <ul class="" id="lucky_list">
+            <!--<li>880001</li>-->
+        </ul>
+    </div>
+</div>
+
 </body>
+
+<script>
+    var lucky = document.getElementById('lucky');
+    var lucky_list = document.getElementById('lucky_list');
+    var lucky_number = 888888;
+
+    function whoIsTheLuckyStar() {
+        var time_limit = 1000;
+        var time = 100;
+
+        var timer = setInterval(function () {
+            if (time < time_limit) {
+                lucky_number = (Math.random() * 1000).toFixed(0);
+                if(lucky_number.length < 3){
+                    lucky_number = '0' + lucky_number;
+                }
+                lucky.innerText = '888' + lucky_number;
+                time = time + 40
+            } else {
+                clearInterval(timer);
+
+                var node = document.createElement("li");
+                var lucky_star = document.createTextNode('888' + lucky_number);
+                node.appendChild(lucky_star);
+                lucky_list.appendChild(node);
+            }
+        }, time)
+    }
+</script>
 </html>
