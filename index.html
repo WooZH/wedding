@@ -59,12 +59,12 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        .lucky_list{
+        .lucky_list {
             padding: 0;
             list-style: none;
         }
 
-        .lucky_list li{
+        .lucky_list li {
             float: left;
             width: 20%;
             text-align: center;
@@ -72,23 +72,37 @@
         }
 
         @media (max-width: 414PX) {
-            .lucky_list li{
+            .lucky_list li {
                 width: 25%;
             }
         }
+
         @media (max-width: 375PX) {
-            .lucky_list li{
+            .lucky_list li {
                 width: 33%;
             }
         }
+
         @media (max-width: 320PX) {
-            .lucky_list li{
+            .lucky_list li {
                 width: 50%;
             }
         }
 
-        .clean{
+        .clean {
             clear: both;
+        }
+
+        .nice-input {
+            border: 0;
+            outline: 0;
+            background: rgba(255, 255, 255, 0.233);
+            padding: 10px 5px;
+
+            color: #ffffff;
+            font-size: 18px;
+            width: 100px;
+            text-align: center;
         }
     </style>
 </head>
@@ -100,6 +114,12 @@
         </div>
 
         <div class="action-bar">
+            <label for="min">最小号码
+                <input class="nice-input" type="tel" id="min"></label>
+            <label for="max">最大号码
+                <input class="nice-input" type="tel" id="max"></label>
+            <br>
+            <br>
             <button class="nice-button" onclick="imLucky()" id="lucky_button">
                 开始抽奖
             </button>
@@ -129,10 +149,14 @@
     var min = 1;
 
     function whoIsTheLuckyStar() {
+
+        min = parseInt(document.getElementById('min').value) || 1;
+        max = parseInt(document.getElementById('max').value) || 300;
+        console.log(min, max)
         var time = 50;
         clearInterval(timer);
         timer = setInterval(function () {
-            lucky_number = (Math.random() * max + min).toFixed(0);
+            lucky_number = (Math.random() * (max - min + 1) + min).toFixed(0);
             if (lucky_number.length == 2) {
                 lucky_number = '0' + lucky_number;
             }
@@ -144,20 +168,20 @@
     }
 
     function imLucky() {
-        if(stars.length >= max){
+        if (stars.length >= max) {
             lucky_button.innerText = '所有号码都抽完啦';
         }
-        else{
+        else {
             if (!start) {
                 whoIsTheLuckyStar();
                 start = true;
                 lucky_button.innerText = '抽奖中~';
             }
             else {
-                if(stars.indexOf(lucky_number)> -1){
+                if (stars.indexOf(lucky_number) > -1) {
                     start = false;
                     imLucky()
-                }else{
+                } else {
                     stars.push(lucky_number);
                     window.clearInterval(timer);
                     var node = document.createElement("li");
